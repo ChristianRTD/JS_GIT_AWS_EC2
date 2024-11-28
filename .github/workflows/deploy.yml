@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - test
 
 jobs:
   deploy:
@@ -18,6 +18,7 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         REMOTE_HOST: ${{ secrets.HOST_DNS }}
+
         REMOTE_USER: ${{ secrets.EC2_USER }}
         TARGET: ${{ secrets.TARGET_DIR }}
 
@@ -29,8 +30,8 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           pm2 delete my-app || echo "No existing process found"
-          cd JS.AWS_EC2_Test  
-          git pull origin main
+          cd JS_GIT_AWS_EC2
+          git pull origin test
           npm install
           npm run build
           pm2 start npm --name "my-app" -- run dev
